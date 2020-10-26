@@ -1,0 +1,24 @@
+{
+    "name": "ismailocal/laravel-version",
+    "description": "Version manager for laravel projects",
+    "type": "composer-plugin",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "İsmail Öcal",
+            "email": "ismailocal@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "LaravelVersion\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "LaravelVersion\\Provider\\VersionServiceProvider"
+            ]
+        }
+    }
+}
