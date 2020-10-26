@@ -1,7 +1,7 @@
 {
     "name": "ismailocal/laravel-version",
     "description": "Version manager for laravel projects",
-    "type": "composer-plugin",
+    "type": "library",
     "license": "MIT",
     "authors": [
         {
