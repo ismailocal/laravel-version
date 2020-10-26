@@ -4,6 +4,8 @@ namespace LaravelVersion\Provider;
 
 use Illuminate\Support\ServiceProvider;
 use LaravelVersion\Command\Generate;
+use LaravelVersion\Command\Reset;
+use LaravelVersion\Command\Up;
 
 class VersionServiceProvider extends ServiceProvider
 {
@@ -25,7 +27,9 @@ class VersionServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->commands([
-            Generate::class
+            Generate::class,
+            Reset::class,
+            Up::class,
         ]);
     }
 }

@@ -4,6 +4,9 @@ namespace LaravelVersion\Helper;
 
 class VersionHelper
 {
+    /** @var array */
+    protected $version;
+
     /**
      * @return array
      */
@@ -21,7 +24,7 @@ class VersionHelper
      */
     private function getPath()
     {
-        return app_path('version.json');
+        return base_path('version.json');
     }
 
     /**
@@ -31,7 +34,7 @@ class VersionHelper
     {
         $path = $this->getPath();
 
-        if (!file_exists($path)) {
+        if (file_exists($path)) {
             unlink($path);
         }
 
@@ -51,5 +54,68 @@ class VersionHelper
         }
 
         return false;
+    }
+
+    /**
+     * @return array|mixed
+     */
+    public function version()
+    {
+        $path = $this->getPath();
+
+        if (file_exists($path)) {
+            return json_decode(file_get_contents($path), true);
+        }
+
+        return [];
+    }
+
+    /**
+     * @param $level
+     * @return bool
+     */
+    public function up($level)
+    {
+        $this->version = $this->version();
+
+        $version = $this->version;
+
+        $up = false;
+        foreach ($version as $key => $value) {
+            if ($key === $level) {
+                $up = true;
+                $version[$key] += 1;
+            } else if ($up) {
+                $version[$key] = 0;
+            }
+        }
+
+        $path = $this->getPath();
+        if (file_exists($path)) {
+            file_put_contents($path, json_encode($version));
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function rollback()
+    {
+        $path = $this->getPath();
+        if (file_exists($path) && $this->version) {
+            file_put_contents($path, json_encode($this->version));
+            return true;
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return implode('.', $this->version());
     }
 }

@@ -4,21 +4,21 @@ namespace LaravelVersion\Command;
 
 use LaravelVersion\Helper\VersionHelper;
 
-class Generate extends \Illuminate\Console\Command
+class Reset extends \Illuminate\Console\Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'version:generate';
+    protected $signature = 'version:reset';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Version generator';
+    protected $description = 'Version resetter';
 
     /**
      *
@@ -26,12 +26,12 @@ class Generate extends \Illuminate\Console\Command
     public function handle()
     {
         $versionHelper = new VersionHelper();
-        $version = $versionHelper->generate();
+        $version = $versionHelper->reset();
         $this->output->writeln($versionHelper);
         if($version){
-            $this->output->writeln('Version generated.');
+            $this->output->writeln('Version resetted.');
         }else{
-            $this->output->writeln('Version not generated!');
+            $this->output->writeln('Version not resetted!');
         }
     }
 }
