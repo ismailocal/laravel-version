@@ -2,6 +2,7 @@
 
 namespace LaravelVersion\Command;
 
+use LaravelVersion\Helper\Version;
 use LaravelVersion\Helper\VersionHelper;
 
 class Generate extends \Illuminate\Console\Command
@@ -25,9 +26,8 @@ class Generate extends \Illuminate\Console\Command
      */
     public function handle()
     {
-        $versionHelper = new VersionHelper();
-        $version = $versionHelper->generate();
-        $this->output->writeln($versionHelper);
+        $version = Version::generate();
+        $this->output->writeln(Version::toString());
         if($version){
             $this->output->writeln('Version generated.');
         }else{

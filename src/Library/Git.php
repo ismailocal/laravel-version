@@ -1,18 +1,15 @@
 <?php
 
-namespace LaravelVersion\Helper;
+namespace LaravelVersion\Library;
 
 use LaravelVersion\Traits\Executable;
 
-class GitTagHelper
+class Git
 {
     use Executable;
 
-    /** @var string */
-    protected $version;
-
     /**
-     * GitTagHelper constructor.
+     * GitHelper constructor.
      * @param string $version
      */
     public function __construct(string $version)
@@ -25,7 +22,17 @@ class GitTagHelper
      */
     public function add()
     {
-        $this->exec("git tag -a {$this->version} -m 'v{$this->version}'");
+        $this->exec('git add version.json');
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function commit()
+    {
+        $this->exec("git commit -m '{$this->version} version up'");
 
         return $this;
     }
@@ -35,7 +42,7 @@ class GitTagHelper
      */
     public function push()
     {
-        $this->exec("git push origin {$this->version}");
+        $this->exec('git push');
 
         return $this;
     }

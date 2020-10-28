@@ -2,15 +2,15 @@
 
 namespace LaravelVersion\Helper;
 
-class VersionHelper
+class Version
 {
     /** @var array */
-    protected $version;
+    protected static $version;
 
     /**
      * @return array
      */
-    private function initialVersion()
+    private static function initialVersion()
     {
         return [
             'major' => 0,
@@ -22,7 +22,7 @@ class VersionHelper
     /**
      * @return string
      */
-    private function getPath()
+    private static function getPath()
     {
         return base_path('version.json');
     }
@@ -30,26 +30,26 @@ class VersionHelper
     /**
      * @return bool
      */
-    public function reset()
+    public static function reset()
     {
-        $path = $this->getPath();
+        $path = static::getPath();
 
         if (file_exists($path)) {
             unlink($path);
         }
 
-        return $this->generate();
+        return static::generate();
     }
 
     /**
      * @return bool
      */
-    public function generate()
+    public static function generate()
     {
-        $path = $this->getPath();
+        $path = static::getPath();
 
         if (!file_exists($path)) {
-            file_put_contents($path, json_encode($this->initialVersion()));
+            file_put_contents($path, json_encode(static::initialVersion()));
             return true;
         }
 
@@ -59,9 +59,9 @@ class VersionHelper
     /**
      * @return array|mixed
      */
-    public function version()
+    public static function version()
     {
-        $path = $this->getPath();
+        $path = static::getPath();
 
         if (file_exists($path)) {
             return json_decode(file_get_contents($path), true);
@@ -74,11 +74,11 @@ class VersionHelper
      * @param $level
      * @return bool
      */
-    public function up($level)
+    public static function up($level)
     {
-        $this->version = $this->version();
+        static::$version = static::version();
 
-        $version = $this->version;
+        $version = static::$version;
 
         $up = false;
         foreach ($version as $key => $value) {
@@ -90,7 +90,7 @@ class VersionHelper
             }
         }
 
-        $path = $this->getPath();
+        $path = static::getPath();
         if (file_exists($path)) {
             file_put_contents($path, json_encode($version));
             return true;
@@ -102,11 +102,11 @@ class VersionHelper
     /**
      * @return bool
      */
-    public function rollback()
+    public static function rollback()
     {
-        $path = $this->getPath();
-        if (file_exists($path) && $this->version) {
-            file_put_contents($path, json_encode($this->version));
+        $path = static::getPath();
+        if (file_exists($path) && static::$version) {
+            file_put_contents($path, json_encode(static::$version));
             return true;
         }
     }
@@ -114,8 +114,8 @@ class VersionHelper
     /**
      * @return string
      */
-    public function __toString()
+    public static function toString()
     {
-        return implode('.', $this->version());
+        return implode('.', static::version());
     }
 }

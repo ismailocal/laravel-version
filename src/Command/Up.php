@@ -2,9 +2,9 @@
 
 namespace LaravelVersion\Command;
 
-use LaravelVersion\Helper\GitHelper;
-use LaravelVersion\Helper\GitTagHelper;
-use LaravelVersion\Helper\VersionHelper;
+use LaravelVersion\Helper\Version;
+use LaravelVersion\Library\Git;
+use LaravelVersion\Library\GitTag;
 
 class Up extends \Illuminate\Console\Command
 {
@@ -27,23 +27,22 @@ class Up extends \Illuminate\Console\Command
      */
     public function handle()
     {
-        $versionHelper = new VersionHelper();
-        $version = $versionHelper->up($this->argument('level'));
-        $this->output->writeln($versionHelper);
+        $version = Version::up($this->argument('level'));
+        $this->output->writeln(Version::toString());
         if ($version) {
             try {
-                $gitHelper = new GitHelper($versionHelper);
-                $gitHelper->add()->commit()->push();
+                $git = new Git(Version::toString());
+                $git->add()->commit()->push();
                 $this->output->writeln('Git pushed.');
 
-                $gitTagHelper = new GitTagHelper($versionHelper);
-                $gitTagHelper->add()->push();
+                $gitTag = new GitTag(Version::toString());
+                $gitTag->add()->push();
                 $this->output->writeln('Git pushed tag.');
 
                 $this->output->writeln('Version upped.');
             } catch (\Exception $exception) {
                 $this->output->writeln('Version rollback!.');
-                $versionHelper->rollback();
+                Version::rollback();
                 throw $exception;
             }
         } else {
