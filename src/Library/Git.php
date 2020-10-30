@@ -9,20 +9,11 @@ class Git
     use Executable;
 
     /**
-     * GitHelper constructor.
-     * @param string $version
-     */
-    public function __construct(string $version)
-    {
-        $this->version = $version;
-    }
-
-    /**
      * @return $this
      */
-    public function add()
+    public function add(string $file)
     {
-        $this->exec('git add version.json');
+        $this->exec('git add ' . $file);
 
         return $this;
     }
@@ -30,9 +21,9 @@ class Git
     /**
      * @return $this
      */
-    public function commit()
+    public function commit(string $message)
     {
-        $this->exec("git commit -m '{$this->version} version up'");
+        $this->exec("git commit -m '{$message}'");
 
         return $this;
     }

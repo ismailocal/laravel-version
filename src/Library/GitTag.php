@@ -9,23 +9,15 @@ class GitTag
     use Executable;
 
     /** @var string */
-    protected $version;
-
-    /**
-     * GitTagHelper constructor.
-     * @param string $version
-     */
-    public function __construct(string $version)
-    {
-        $this->version = $version;
-    }
+    protected $name;
 
     /**
      * @return $this
      */
-    public function add()
+    public function add(string $name, string $message)
     {
-        $this->exec("git tag -a {$this->version} -m 'v{$this->version}'");
+        $this->name = $name;
+        $this->exec("git tag -a {$name} -m '{$message}'");
 
         return $this;
     }
@@ -35,7 +27,7 @@ class GitTag
      */
     public function push()
     {
-        $this->exec("git push origin {$this->version}");
+        $this->exec("git push origin {$this->name}");
 
         return $this;
     }

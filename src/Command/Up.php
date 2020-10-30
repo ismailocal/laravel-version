@@ -27,26 +27,29 @@ class Up extends \Illuminate\Console\Command
      */
     public function handle()
     {
-        $version = Version::up($this->argument('level'));
-        $this->output->writeln(Version::toString());
-        if ($version) {
+        $isUpdated = Version::up($this->argument('level'));
+        if ($isUpdated) {
+            $version = Version::toString();
             try {
-                $git = new Git(Version::toString());
-                $git->add()->commit()->push();
+                $git = new Git();
+                $git->add('version.json')
+                    ->commit($version . ' version up')
+                    ->push();
+
                 $this->output->writeln('Git pushed.');
 
-                $gitTag = new GitTag(Version::toString());
-                $gitTag->add()->push();
-                $this->output->writeln('Git pushed tag.');
+                $gitTag = new GitTag();
+                $gitTag->add($version, 'v' . $version)->push();
 
-                $this->output->writeln('Version upped.');
+                $this->output->writeln('Git pushed tag.');
+                $this->output->writeln($version . ' version updated.');
             } catch (\Exception $exception) {
-                $this->output->writeln('Version rollback!.');
+                dd($exception->getMessage());
                 Version::rollback();
                 throw $exception;
             }
         } else {
-            $this->output->writeln('Version not upped!');
+            $this->output->writeln($version . ' version not updated!');
         }
     }
 }
